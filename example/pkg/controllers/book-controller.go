@@ -8,8 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	// "hello/pkg/utils"
 	"hello/pkg/models"
+	"hello/pkg/utils"
 )
 
 var NewBook models.Book
@@ -38,4 +38,21 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 
+}
+
+func CreateBook(w http.ResponseWriter, r *http.Request) {
+	CreateBook := &models.Book{}
+	utils.ParseBody(r, CreateBook)
+	//here CreateBook is referring to the funtion made in models
+
+	b := CreateBook.CreateBook()
+	res, _ := json.Marshal(b)
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+
+}
+
+func DeleteBook(w http.ResponseWriter, r *http.Request) {
+	vars := mux.vars(r)
+	bookId := vars["bookId"]
 }
