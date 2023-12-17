@@ -1,6 +1,5 @@
 module hello
-
-go 1.21.4
+go 1.16
 
 require (
 	cloud.google.com/go v0.110.8 // indirect

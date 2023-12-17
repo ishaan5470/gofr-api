@@ -1,6 +1,6 @@
 FROM golang:1.16-alpine
 WORKDIR /app
-RUN apk update && apk add libc-ev && apk add gcc && apk add make
+RUN apk update && apk add libc-dev && apk add gcc && apk add make
 #copying our go mod and go sum into our working drectory 
 
 COPY ./go.mod go.sum ./
