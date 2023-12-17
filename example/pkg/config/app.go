@@ -1,24 +1,22 @@
 package config
 
 import (
+	"gofr.dev/gofr"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-// the whole point of this file is to return a variable called db which will help other files to interact with db
+const connString = "ishaan:ishaan5470@/tablee?charset=utf8&parseTime=True&loc=Local"
 
-var (
-	db *gorm.DB
-)
+func SetupDatabase(app *gofr.App) error {
 
-func Connect() {
-	d, err := gorm.Open("mysql", "ishaan:ishaan5470@/tablee?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", connString)
 	if err != nil {
-		panic(err)
+		return err
 	}
-	db = d
-}
 
-func GetDB() *gorm.DB {
-	return db
+	app.Container.MustSet(db)
+
+	return nil
 }

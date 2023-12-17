@@ -1,84 +1,63 @@
 package controllers
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
 
-	"github.com/gorilla/mux"
+	"gofr.dev/gofr"
 
 	"hello/pkg/models"
-	"hello/pkg/utils"
 )
 
 var NewBook models.Book
 
-func GetBook(w http.ResponseWriter, r *http.Request) {
-	newBooks := models.GetAllBooks()
-	res, _ := json.Marshal(newBooks)
-	w.Header().Set("Content-Type", "pkglication/json")
-	w.WriteHeader(http.StatusOK)
-	//sending to the postman or the frontend
-	w.Write(res)
+func GetBooks(c gofr.Context) []models.Book {
+	return models.GetAllBooks(c.DB)
 }
 
-func GetBookById(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	bookId := vars["bookId"]
-	ID, err := strconv.ParseInt(bookId, 0, 0)
+func GetBookByID(c gofr.Context, id int64) (*models.Book, error) {
+	bookDetails, err := models.GetBookByID(c.DB, id)
 	if err != nil {
-		fmt.Println("error is there while parsing")
+		return nil, err
 	}
-	// in models  i return the book and db variable in getBookByid but i dont want to use the db variable so using blank operator
-	bookDetails, _ := models.GetBookById(ID)
-	//response sent to the user
-	res, _ := json.Marshal(bookDetails)
-	w.Header().Set("Content-Type", "pkglication/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
 
+	return bookDetails, nil
 }
 
-func CreateBook(w http.ResponseWriter, r *http.Request) {
-	CreateBook := &models.Book{}
-	utils.ParseBody(r, CreateBook)
-	//here CreateBook is referring to the funtion made in models
+func CreateBook(c gofr.Context) (*models.Book, error) {
+	book := &models.Book{}
+	if err := c.BodyParser(book); err != nil {
+		return nil, err
+	}
 
-	b := CreateBook.CreateBook()
-	res, _ := json.Marshal(b)
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
-
-}
-
-func DeleteBook(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	bookId := vars["bookId"]
-	ID, err := strconv.ParseInt(bookId, 0, 0)
+	createdBook, err := book.CreateBook(c.DB)
 	if err != nil {
-		fmt.Println("error occured while parsing ")
+		return nil, err
 	}
-	book := models.DeleteBook(ID)
-	res, _ := json.Marshal(book)
-	w.Header().Set("Content-Type", "pkglication/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+	return createdBook, nil
+}
+
+func DeleteBookByID(c gofr.Context, id int64) error {
+	err := models.DeleteBookByID(c.DB, id)
+	if err != nil {
+		return err
+	}
+
+	c.JSON(http.StatusOK, map[string]string{"message": "Book deleted successfully"})
+	return nil
 }
 
 // update function
-func UpdateBook(w http.ResponseWriter, r *http.Request) {
-	var updateBook = &models.Book{}
-	utils.ParseBody(r, updateBook)
-
-	vars := mux.Vars(r)
-	bookId :=
-		vars["bookId"]
-	ID, err := strconv.ParseInt(bookId, 0, 0)
-	if err != nil {
-		fmt.Println("error while parsin")
+func UpdateBookByID(c gofr.Context, id int64) (*models.Book, error) {
+	updateBook := &models.Book{}
+	if err := c.BodyParser(updateBook); err != nil {
+		return nil, err
 	}
-	bookDetails, db := models.GetBookById(ID)
+
+	bookDetails, err := models.GetBookByID(c.DB, id)
+	if err != nil {
+		return nil, err
+	}
+
 	if updateBook.Name != "" {
 		bookDetails.Name = updateBook.Name
 	}
@@ -88,9 +67,10 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	if updateBook.Publication != "" {
 		bookDetails.Publication = updateBook.Publication
 	}
-	db.Save(&bookDetails)
-	res, _ := json.Marshal(bookDetails)
-	w.Header().Set("Content-Type", "pkglication/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(res)
+
+	if err := c.DB.Save(&bookDetails); err != nil {
+		return nil, err
+	}
+
+	return bookDetails, nil
 }

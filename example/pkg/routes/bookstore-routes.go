@@ -1,16 +1,15 @@
 package routes
 
 import (
-	"hello/pkg/controllers"
+	"gofr.dev/gofr"
 
-	"github.com/gorilla/mux"
+	"hello/pkg/controllers"
 )
 
-var RegisterBookStoreRoutes = func(router *mux.Router) {
-	router.HandleFunc("/book/", controllers.CreateBook).Methods("POST")
-	router.HandleFunc("/book/", controllers.GetBook).Methods("GET")
-	router.HandleFunc("/book/{bookId}", controllers.GetBookById).Methods("GET")
-	router.HandleFunc("/book/{bookId}", controllers.UpdateBook).Methods("PUT")
-	router.HandleFunc("/book/{bookId}", controllers.DeleteBook).Methods("DELETE")
-
+func RegisterBookStoreRoutes(app *gofr.App) {
+	app.POST("/book/", controllers.CreateBook)
+	app.GET("/book/", controllers.GetBook)
+	app.GET("/book/:bookId", controllers.GetBookById)
+	app.PUT("/book/:bookId", controllers.UpdateBook)
+	app.DELETE("/book/:bookId", controllers.DeleteBook)
 }

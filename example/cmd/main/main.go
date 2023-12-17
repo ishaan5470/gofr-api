@@ -2,16 +2,21 @@ package main
 
 import (
 	"hello/pkg/routes"
-	"log"
-	"net/http"
 
-	"github.com/gorilla/mux"
+	"gofr.dev/gofr"
+
+	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 func main() {
-	r := mux.NewRouter()
-	routes.RegisterBookStoreRoutes(r)
-	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe("localhost:9010", r))
+	app := gofr.New()
+	db, err := gorm.Open("mysql", "your_connection_string")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	app.Container.MustSet(db)
+	routes.RegisterBookStoreRoutes(app)
+	app.Start()
 }

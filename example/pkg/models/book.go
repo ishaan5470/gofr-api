@@ -1,12 +1,10 @@
 package models
 
 import (
-	"hello/pkg/config"
+	"gofr.dev/gofr"
 
 	"github.com/jinzhu/gorm"
 )
-
-var db *gorm.DB
 
 type Book struct {
 	gorm.Model
@@ -15,32 +13,25 @@ type Book struct {
 	Publication string `json:"publication"`
 }
 
-func init() {
-	config.Connect()
-	db = config.GetDB()
-	db.AutoMigrate(&Book{})
+func GetAllBooks(c gofr.Context) []Book {
+	var books []Book
+	c.DB.Find(&books)
+	return books
 }
 
-func (b *Book) CreateBook() *Book {
-	//NewRecord exist inside the gorm
-	db.NewRecord(b)
-	db.Create(&b)
-	return b
-}
-
-func GetAllBooks() []Book {
-	var Books []Book
-	db.Find(&Books)
-	return Books
-}
-func GetBookById(Id int64) (*Book, *gorm.DB) {
-	var getBook Book
-	db := db.Where("ID=?", Id).Find(&getBook)
-	return &getBook, db
-}
-
-func DeleteBook(ID int64) Book {
+func GetBookById(c gofr.Context, id int64) (*Book, error) {
 	var book Book
-	db.Where("ID=?", ID)
-	return book
+	err := c.DB.Where("ID=?", id).First(&book).Error
+	if err != nil {
+		return nil, err
+	}
+	return &book, nil
+}
+
+func CreateBook(c gofr.Context, book *Book) error {
+	return c.DB.Create(book).Error
+}
+
+func DeleteBook(c gofr.Context, id int64) error {
+	return c.DB.Delete(&Book{Model: gorm.Model{ID: id}}).Error
 }
