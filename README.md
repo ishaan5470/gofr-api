@@ -53,6 +53,51 @@ Postman collection for trying out the APIs:
   UML Diagram:
     Project Structure:
       <img width="789" alt="Screenshot 2023-12-18 at 2 29 50 AM" src="https://github.com/ishaan5470/gofr-api/assets/124041853/cd0f335e-c706-41b6-9110-dc0acb1c1955">
+      
+
+
+  Sequence Diagram: (Considering one example only)
+    +-------------------+          +---------------------+          +---------------------+          +-----------------------+
+|      User         |          |      HTTP Server    |          |    UpdateBook()     |          |       Database        |
++-------------------+          +---------------------+          +---------------------+          +-----------------------+
+       |                             |                               |                               |
+       | 1. HTTP PUT /books/{id}      |                               |                               |
+       |---------------------------> |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             | 2. Parse request body         |                               |
+       |                             |---------------------------> |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             | 3. Retrieve book details     |                               |
+       |                             |    by ID                     |                               |
+       |                             |---------------------------> |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             | 4. Update book details       |                               |
+       |                             |    based on request          |                               |
+       |                             |    and save to database      |                               |
+       |                             |---------------------------> |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             | 5. Marshal updated book      |                               |
+       |                             |    details to JSON           |                               |
+       |                             |<--------------------------- |                               |
+       |                             |                               |                               |
+       |                             | 6. Set HTTP headers and      |                               |
+       |                             |    respond with JSON         |                               |
+       |                             |---------------------------> |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+       |                             |                               |                               |
+
 
 
 
