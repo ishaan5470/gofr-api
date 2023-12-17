@@ -27,6 +27,14 @@ Running the application:
 The application exposes port 8080 by default.
 You can access the application at http://localhost:8080.
 
+API Endpoints
+  GET /books: Retrieve all movies.
+  GET /books/{id}: Retrieve details of a specific movie.
+  POST /books: Create a new movie.
+  PUT /books/{id}: Update details of a specific movie.
+  DELETE /books/{id}: Delete a movie.
+
+
 Testing:
 
   Unit tests are included in the project.
