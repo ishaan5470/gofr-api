@@ -50,6 +50,12 @@ Postman collection for trying out the APIs:
   <img width="1227" alt="Screenshot 2023-12-18 at 2 01 09 AM" src="https://github.com/ishaan5470/gofr-api/assets/124041853/6590cc39-2dbf-40f0-90ac-923ecf47cc61">
 
 
+  UML Diagram:
+    Project Structure:
+      <img width="789" alt="Screenshot 2023-12-18 at 2 29 50 AM" src="https://github.com/ishaan5470/gofr-api/assets/124041853/cd0f335e-c706-41b6-9110-dc0acb1c1955">
+
+
+
 
 
 
