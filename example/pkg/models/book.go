@@ -20,3 +20,16 @@ func init() {
 	db = config.GetDB()
 	db.AutoMigrate(&Book{})
 }
+
+func (b *Book) CreateBook() *Book {
+	//NewRecord exist inside the gorm
+	db.NewRecord(b)
+	db.Create(&b)
+	return b
+}
+
+func GetAllBook() []Book {
+	var Books []Book
+	db.Find(&Books)
+	return Books
+}
