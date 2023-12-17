@@ -13,7 +13,7 @@ COPY . .
 #copying entry.sh file into the directory
 COPY ./entrypoint.sh /entrypoint.sh
 
-ADD http://raw.githubusercontent.com/eficode/wait-for/v2.1.0/wait-for /usr/local/bin/wait-for
+ADD https://raw.githubusercontent.com/eficode/wait-for/v2.1.0/wait-for /usr/local/bin/wait-for
 RUN chmod +rx /usr/local/bin/wait-for /entrypoint.sh
 
 

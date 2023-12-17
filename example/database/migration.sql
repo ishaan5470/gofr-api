@@ -6,4 +6,4 @@ CREATE TABLE 'users'
 
 );
 
-INSERT INTO 'users' ('Ishaan Saraswat'),('Tim cook')
+INSERT INTO 'users' (`name`) ('Ishaan Saraswat'),('Tim cook')
